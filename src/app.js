@@ -1,6 +1,7 @@
 const yargs = require("yargs");
 const {sequelize} = require("./db/connection");
-const {add, list, remove, update } = require("./functions/functions.js");
+const {add, list, remove, updateT, updateA, updateR } = require("./functions/functions.js");
+
 
 
 const app = async(yargsObj)=>{
@@ -11,7 +12,7 @@ const app = async(yargsObj)=>{
 
         if (yargsObj.add){
             //adding to the table
-            await add({ title: yargsObj.title, actor: yargsObj.actor, rating: yargsObj.rating });
+            await add({ title: yargsObj.title, actor: yargsObj.actor, rating: yargsObj.rating }, {userName: yargsObj.userName});
             console.log(`${yargsObj.title} has been added`)
 
         }else if(yargsObj.list){
@@ -22,9 +23,13 @@ const app = async(yargsObj)=>{
             await remove({title: yargsObj.title});
             console.log(`Deleted ${yargsObj.title}`);
 
-        } else if (yargsObj.update){
+        } else if (yargsObj.updateT){
             //state new title then old title
-            await update({newtitle: yargsObj.newtitle, title: yargsObj.title});
+            await updateT({newtitle: yargsObj.newtitle, title: yargsObj.title});
+        } else if (yargsObj.updateA){
+            await updateA({newactor: yargsObj.newactor, title: yargsObj.title});
+        } else if (yargsObj.updateR){
+            await updateR({newrating: yargsObj.newrating, title: yargsObj.title});
 
         }else{
             console.log("Incorrect Command");
@@ -39,6 +44,9 @@ const app = async(yargsObj)=>{
 app(yargs.argv)
 
 //COMMANDS
-//node src/app.js --add --title "" --actor "" --rating ""
+//node src/app.js --add --title "" --actor "" --rating  --userName ""
 //node src/app.js --list
-// $ node src/app.js --add --id=1 --title="SpiderMan" --actor="Tom Holland" --rating="8" --userName="Linden"
+//node src/app.js --delete --title ""
+//node src/app.js --updateT --newtitle "" --title ""
+//node src/app.js --updateA --newactor "" --title ""
+//node src/app.js --updateR --newrating  --title ""

@@ -1,12 +1,13 @@
 const { sequelize } = require("../db/connection");
-const Movie = require("../tables/movies");
-
+const Movie = require("../tables/moviesTable");
+const User = require("../tables/userTable")
 
 
 // add movie function
-exports.add = async (movieObj) => {
+exports.add = async (movieObj, userObj) => {
     try {
         await Movie.create(movieObj);
+        await User.create(userObj);
         console.log("Success");
     } catch (error) {
         console.log(error)
@@ -17,6 +18,7 @@ exports.add = async (movieObj) => {
 exports.list = async () => {
     try {
         console.log(await Movie.findAll()); 
+        console.log(await User.findAll()); 
     } catch (error) {
         console.log(error);
     }
@@ -36,7 +38,7 @@ exports.remove = async (movieObj) => {
 };
 
 // update movie function by title
-exports.update = async (movieObj) => {
+exports.updateT = async (movieObj) => {
     try {
         await Movie.update({ 
             title: movieObj.newtitle }, 
@@ -46,6 +48,32 @@ exports.update = async (movieObj) => {
     });
         console.log("Updated movie");
     } catch (error) {
-        console.log(error)
+        console.log("update title",error)
+    }
+};
+exports.updateA = async (movieObj) => {
+    try {
+        await Movie.update({ 
+            actor: movieObj.newactor }, 
+        { where: { 
+            title: movieObj.title 
+        } 
+    });
+        console.log("Updated Actor");
+    } catch (error) {
+        console.log("update actor", error)
+    }
+};
+exports.updateR = async (movieObj) => {
+    try {
+        await Movie.update({ 
+            rating: movieObj.newrating}, 
+        { where: { 
+            title: movieObj.title 
+        } 
+    });
+        console.log("Updated Rating");
+    } catch (error) {
+        console.log("update rating",error)
     }
 };
